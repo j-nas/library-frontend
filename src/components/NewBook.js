@@ -10,13 +10,24 @@ const NewBook = (props) => {
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
+  const [addBook] = useMutation(ADD_BOOK)
+
+  console.log(addBook)
+
   if (!props.show) {
     return null
   }
 
   const submit = async (event) => {
     event.preventDefault()
-    
+    addBook({
+      variables: {
+        title,
+        author,
+        published: parseInt(published, 10),
+        genres
+      }
+    })
     console.log('add book...')
 
     setTitle('')
