@@ -1,1 +1,13 @@
-import { gql } from '@appolo/client'
+import { gql } from '@apollo/client'
+
+export const ALL_AUTHORS = gql`
+  query AllAuthors {
+    allAuthors {
+      name
+      id
+      bookCount
+      born  
+    }
+  }
+`
+            
