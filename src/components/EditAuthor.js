@@ -3,7 +3,6 @@ import Select from "react-select";
 import { useQuery, useMutation } from '@apollo/client'
 import { ALL_AUTHORS } from '../queries'
 import { EDIT_AUTHOR } from '../mutations'
-import { arrowFunctionExpression } from "@babel/types";
 
 export default function EditAuthor({ isVisible }) {
   const [selectedAuthor, setSelectedAuthor] = useState(null);
@@ -14,9 +13,18 @@ export default function EditAuthor({ isVisible }) {
     label: author.name
   }));
   
-  const updateAuthor = useMutation(EDIT_AUTHOR, {
+  const [ editAuthor ] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }]
   });
+  const submit = async (event) => {
+    event.preventDefault();
+    await editAuthor({ variables: { 
+      name: selectedAuthor.value, 
+      setBornTo: parseInt(yearOfBirth, 10)
+    } });
+    setSelectedAuthor(null);
+    setYearOfBirth("");
+  }
 
 
   if (!isVisible) {
@@ -40,14 +48,14 @@ export default function EditAuthor({ isVisible }) {
       <div>
         {selectedAuthor && (
           <>
-            <label>
+            <form onSubmit={submit}>
               Year of birth:
               <input
                 value={yearOfBirth}
                 onChange={({ target }) => setYearOfBirth(target.value)}
               />
-            </label>
-            <button onClick={() => updateAuthor()}>Update author</button>
+            <button type="submit">Update author</button>
+            </form>
           </>
         )}
 
