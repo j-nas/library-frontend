@@ -1,34 +1,36 @@
 import React, { useState, useEffect } from 'react'
 
-import { useApolloClient, useMutation, useQuery } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { LOGIN } from '../mutations'
-import { CURRENT_USER } from '../queries'
 
-export default function LoginForm({ setErrorMessage, setToken }) {
+export default function LoginForm(
+  { setErrorMessage, 
+    setToken, 
+    show,
+    setPage 
+  }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const client = useApolloClient()
-  const currentUser = useQuery(CURRENT_USER) 
+
+
 
   const [ login, result ] = useMutation(LOGIN, {
     onError: (error) => {
       setErrorMessage(error.graphQLErrors[0].message)
     }
   })
-  console.log(currentUser)
+  
+
   useEffect(() => {
     if (result.data) {
       const token = result.data.login.value
       setToken(token)
       localStorage.setItem('library-user-token', token)
+      setUsername('')
+      setPassword('')
+      setPage('authors')
     }
-  }, [result.data])
-
-  const logout = () => {
-    setToken(null)
-    localStorage.clear()
-    client.resetStore()
-  }
+  }, [result.data]) // eslint-disable-line
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -36,16 +38,10 @@ export default function LoginForm({ setErrorMessage, setToken }) {
   }
 
 
-  // if (currentUser.data.me) {  
-  //   return (
-  //     <div>
-  //       <h2>{currentUser.data.me.username} is currently logged in</h2>
-  //       User is currently logged in<br/>
-  //       <button>logout</button>
-  //     </div>
-  //   )
-  // }
-
+ 
+  if(!show) {
+    return null
+  }
   return (
     <div>
       <h2>login</h2>
