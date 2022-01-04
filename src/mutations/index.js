@@ -1,15 +1,17 @@
 import { gql } from '@apollo/client';
 
 export const ADD_BOOK = gql`
-  mutation addBook($title: String!, $author: String!, $published: Int!, $genres: [String]) {
+  mutation addBook($title: String!, $author: AuthorInput!, $published: Int!, $genres: [String]!) {
     addBook(
       title: $title, 
-      author: $author, 
+      author: $author,
       published: $published, 
       genres: $genres
       ) {
         title
-        author 
+        author {
+          name
+        }
         published
         genres
     }
@@ -25,3 +27,11 @@ export const EDIT_AUTHOR = gql`
     }
   }
 `;
+
+export const LOGIN = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      value
+    }
+  }
+`;      
