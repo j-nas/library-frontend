@@ -8,9 +8,15 @@ import LoginForm from './components/LoginForm'
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   if (!token) {
-    return (<LoginForm setToken={setToken} token={token}/>)
+    return (
+      <LoginForm 
+        setToken={setToken} 
+        setErrorMessage={setErrorMessage}
+      />
+    )
   }
   return (
     <div>
@@ -35,11 +41,7 @@ const App = () => {
         show={page === 'add'}
         token={token}
       />
-      <LoginForm
-        show={page === 'login'}
-        setToken={setToken}
-        token={token}
-      />
+      
 
     </div>
   )
