@@ -16,6 +16,7 @@ const App = () => {
   const logout = () => {
     setToken(null)
     setErrorMessage(null)
+    setPage('authors')
     localStorage.clear()
   }
   useEffect(() => {
