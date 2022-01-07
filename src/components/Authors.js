@@ -4,11 +4,11 @@ import { useQuery } from '@apollo/client'
 import { ALL_AUTHORS } from '../queries'
 import EditAuthor from './EditAuthor'
 
-const Authors = (props) => {
+const Authors = ({ show, setErrorMessage }) => {
   const [showEdit, setShowEdit] = useState(false)
 
   const authors = useQuery(ALL_AUTHORS)
-  if (!props.show) {
+  if (!show) {
     return null
   }
   if (authors.loading) {
@@ -39,7 +39,7 @@ const Authors = (props) => {
         </tbody>
       </table>
       <button onClick={() => setShowEdit(!showEdit)}>Edit authors</button>
-      <EditAuthor isVisible={showEdit}/>
+      <EditAuthor isVisible={showEdit} setErrorMessage={setErrorMessage}/>
     </div>
   )
 }

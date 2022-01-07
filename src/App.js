@@ -50,17 +50,19 @@ const App = () => {
       <Authors
         show={page === 'authors'}
         token={token}
-        setToken={setToken}
+        setErrorMessage={setErrorMessage}
       />
 
       <Books
         show={page === 'books'}
         token={token}
+        setErrorMessage={setErrorMessage}
       />
 
       <NewBook
         show={page === 'add'}
         token={token}
+        setErrorMessage={setErrorMessage}
       />
       <LoginForm
         show={page === 'login'}

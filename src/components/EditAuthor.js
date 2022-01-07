@@ -4,7 +4,7 @@ import { useQuery, useMutation } from '@apollo/client'
 import { ALL_AUTHORS } from '../queries'
 import { EDIT_AUTHOR } from '../mutations'
 
-export default function EditAuthor({ isVisible }) {
+export default function EditAuthor({ isVisible, setErrorMessage }) {
   const [selectedAuthor, setSelectedAuthor] = useState(null);
   const [yearOfBirth, setYearOfBirth] = useState("");
 
@@ -14,6 +14,9 @@ export default function EditAuthor({ isVisible }) {
   }));
   
   const [ editAuthor ] = useMutation(EDIT_AUTHOR, {
+    onError: (error) => {
+      setErrorMessage(error.graphQLErrors[0].message)
+    },
     refetchQueries: [{ query: ALL_AUTHORS }]
   });
   const submit = async (event) => {
