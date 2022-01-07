@@ -1,33 +1,37 @@
-import React, {useEffect, useState} from "react";
-import { useQuery, useLazyQuery } from "@apollo/client";
+import React, { useEffect } from "react";
+import { useLazyQuery } from "@apollo/client";
 import { BOOKS_BY_GENRE, CURRENT_USER } from "../queries";
 
 
 
 
 export default function Recommended({ show, token }) {
- 
-  const [genre, setGenre] = useState(null);
   
-  const currentUser = useQuery(CURRENT_USER,
-    {
-      onCompleted: (data) => {
-        if (data.me) {
-          setGenre(data.me.favoriteGenre);
-        }
-      }
-    });
-    const [getBooks, booksByGenre] = useLazyQuery(BOOKS_BY_GENRE, {
-      variables: { genre },
-    })
+  console.log('token', token)
   
+  const [getCurrentUser, currentUser] = useLazyQuery(CURRENT_USER, {
+    onCompleted: (data) => {
+      getBooks(data)
+    }
+  });
+
+  const {  // assign default property to current user, so if user is not logged
+    data: { // in it will not throw an error
+      me: { favoriteGenre },
+    } = { me: { favoriteGenre: null } },
+  } = currentUser;
+
+
+  const [getBooks, booksByGenre] = useLazyQuery(BOOKS_BY_GENRE, {
+    variables: { genre: favoriteGenre } 
+  });
   useEffect(() => {
     
-    if (genre) {
-      getBooks()
+    
+    if (token) {
+      getCurrentUser()
     }
-  }, [genre, getBooks])
-
+  }, [getBooks, getCurrentUser, token])
 
   if (!show) return null;
   if (currentUser.loading || booksByGenre.loading) return <div>loading...</div>;
