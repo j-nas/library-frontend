@@ -69,6 +69,7 @@ const App = () => {
       />
       <Recommended
         show={page === 'recommended'}
+        token={token}
       />
 
     </div>

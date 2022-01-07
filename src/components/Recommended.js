@@ -1,28 +1,38 @@
 import React, {useEffect, useState} from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import { BOOKS_BY_GENRE, CURRENT_USER } from "../queries";
 
 
 
 
-export default function Recommended(props) {
-  
+export default function Recommended({ show, token }) {
+ 
   const [genre, setGenre] = useState(null);
-  const currentUser = useQuery(CURRENT_USER);
-  const booksByGenre = useQuery(BOOKS_BY_GENRE, {
-    variables: { genre: genre }
-  });
-
+  
+  const currentUser = useQuery(CURRENT_USER,
+    {
+      onCompleted: (data) => {
+        if (data.me) {
+          setGenre(data.me.favoriteGenre);
+        }
+      }
+    });
+    const [getBooks, booksByGenre] = useLazyQuery(BOOKS_BY_GENRE, {
+      variables: { genre },
+    })
+  
   useEffect(() => {
-    if (currentUser.data) {
-      setGenre(currentUser.data.me.favoriteGenre);
+    
+    if (genre) {
+      getBooks()
     }
-  }, [currentUser.data])
+  }, [genre, getBooks])
 
 
-  if (!props.show) return null;
+  if (!show) return null;
   if (currentUser.loading || booksByGenre.loading) return <div>loading...</div>;
   if (currentUser.error || booksByGenre.error) return <div>error</div>
+  console.log('books by genre', booksByGenre)
   return (
     <div>
       <h1>
