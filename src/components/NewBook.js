@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { ADD_BOOK } from '../mutations'
+import { ALL_BOOKS } from '../queries'
 import { useMutation } from '@apollo/client'
 
 
@@ -14,6 +15,7 @@ const NewBook = ({ show, setErrorMessage }) => {
     onError: (error) => {
       setErrorMessage(error.graphQLErrors[0].message)
     },
+    refetchQueries: [{ query: ALL_BOOKS }]
   })
 
   console.log(addBook)
