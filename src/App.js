@@ -7,12 +7,22 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import Recommended from './components/Recommended'
+import { useSubscription } from '@apollo/client'
+import { BOOK_ADDED } from './subscriptions'
 
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const { bookAdded } = subscriptionData.data
+      toast(
+        `${bookAdded.title}, written by ${bookAdded.author.name} added`
+      )
+    }
+  })
   const logout = () => {
     setToken(null)
     setErrorMessage(null)
